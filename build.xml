@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="stringcalculator" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.ane"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module StringCalculator -->
+  
+  <dirname property="module.stringcalculator.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.stringcalculator" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="stringcalculator.output.dir" value="${module.stringcalculator.basedir}/out/production/StringCalculator"/>
+  <property name="stringcalculator.testoutput.dir" value="${module.stringcalculator.basedir}/out/test/StringCalculator"/>
+
+  <property name="stringcalculator.src.dir" value="${module.stringcalculator.basedir}/src/"/>
+  <property name="stringcalculator.testsrc.dir" value="${module.stringcalculator.basedir}/tests/"/>
+
+  <path id="stringcalculator.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="stringcalculator.module.production.classpath"/>
+  
+  <path id="stringcalculator.runtime.production.module.classpath">
+    <pathelement location="${stringcalculator.output.dir}"/>
+  </path>
+  
+  <path id="stringcalculator.module.classpath">
+    <pathelement location="${stringcalculator.output.dir}"/>
+    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  <path id="stringcalculator.runtime.module.classpath">
+    <pathelement location="${stringcalculator.testoutput.dir}"/>
+    <pathelement location="${stringcalculator.output.dir}"/>
+    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.stringcalculator">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.stringcalculator">
+    <patternset refid="excluded.from.module.stringcalculator"/>
+  </patternset>
+  
+  <path id="stringcalculator.module.sourcepath">
+    <dirset dir="${module.stringcalculator.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="stringcalculator.module.test.sourcepath">
+    <dirset dir="${module.stringcalculator.basedir}">
+      <include name="tests"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.stringcalculator" depends="compile.module.stringcalculator.production,compile.module.stringcalculator.tests" description="Compile module StringCalculator"/>
+  
+  <target name="compile.module.stringcalculator.production" description="Compile module StringCalculator; production classes">
+    <mkdir dir="${stringcalculator.output.dir}"/>
+    <javac destdir="${stringcalculator.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.stringcalculator}"/>
+      <bootclasspath refid="stringcalculator.module.bootclasspath"/>
+      <classpath refid="stringcalculator.module.production.classpath"/>
+      <src refid="stringcalculator.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.stringcalculator"/>
+    </javac>
+    
+    <copy todir="${stringcalculator.output.dir}">
+      <fileset dir="${module.stringcalculator.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.stringcalculator.tests" depends="compile.module.stringcalculator.production" description="compile module StringCalculator; test classes" unless="skip.tests">
+    <mkdir dir="${stringcalculator.testoutput.dir}"/>
+    <javac destdir="${stringcalculator.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.stringcalculator}"/>
+      <bootclasspath refid="stringcalculator.module.bootclasspath"/>
+      <classpath refid="stringcalculator.module.classpath"/>
+      <src refid="stringcalculator.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.stringcalculator"/>
+    </javac>
+    
+    <copy todir="${stringcalculator.testoutput.dir}">
+      <fileset dir="${module.stringcalculator.basedir}/tests">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.stringcalculator" description="cleanup module">
+    <delete dir="${stringcalculator.output.dir}"/>
+    <delete dir="${stringcalculator.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.stringcalculator" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.stringcalculator" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+
+  <!-- Run jUnit -->
+  <target name="junit" depends="compile.module.stringcalculator">
+
+    <junit printsummary="yes" haltonfailure="no">
+
+      <classpath location="stringcalculator.module.classpath" />
+      <classpath>
+        <pathelement location="${stringcalculator.output.dir}"/>
+        <pathelement location="${stringcalculator.testoutput.dir}"/>
+        <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+      </classpath>
+
+      <formatter type="xml" />
+      <batchtest fork="yes" todir="${stringcalculator.testoutput.dir}">
+        <fileset dir="${stringcalculator.testsrc.dir}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+
+    </junit>
+  </target>
+</project>
