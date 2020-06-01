@@ -77,22 +77,23 @@
   </path>
   
   <path id="stringcalculator.module.production.classpath"/>
-  
+
   <path id="stringcalculator.runtime.production.module.classpath">
     <pathelement location="${stringcalculator.output.dir}"/>
   </path>
   
   <path id="stringcalculator.module.classpath">
     <pathelement location="${stringcalculator.output.dir}"/>
-    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+    <pathelement location="${module.stringcalculator.basedir}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${module.stringcalculator.basedir}/lib/junit-4.12.jar"/>
   </path>
   
   <path id="stringcalculator.runtime.module.classpath">
     <pathelement location="${stringcalculator.testoutput.dir}"/>
     <pathelement location="${stringcalculator.output.dir}"/>
-    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
-    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+
+    <pathelement location="${module.stringcalculator.basedir}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${module.stringcalculator.basedir}/lib/junit-4.12.jar"/>
   </path>
   
   
@@ -108,6 +109,7 @@
     <dirset dir="${module.stringcalculator.basedir}">
       <include name="src"/>
     </dirset>
+
   </path>
   
   <path id="stringcalculator.module.test.sourcepath">
@@ -115,8 +117,7 @@
       <include name="tests"/>
     </dirset>
   </path>
-  
-  
+
   <target name="compile.module.stringcalculator" depends="compile.module.stringcalculator.production,compile.module.stringcalculator.tests" description="Compile module StringCalculator"/>
   
   <target name="compile.module.stringcalculator.production" description="Compile module StringCalculator; production classes">
@@ -179,9 +180,11 @@
       <classpath>
         <pathelement location="${stringcalculator.output.dir}"/>
         <pathelement location="${stringcalculator.testoutput.dir}"/>
-        <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
-        <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+
+        <pathelement location="${module.stringcalculator.basedir}/lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="${module.stringcalculator.basedir}/lib/junit-4.12.jar"/>
       </classpath>
+
 
       <formatter type="xml" />
       <batchtest fork="yes" todir="${stringcalculator.testoutput.dir}">
