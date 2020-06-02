@@ -1,37 +1,29 @@
 package codes.rajp;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * String Calculator
- * This class implements a method which adds zero, one, or two numbers.
+ * This class implements a method which adds n numbers separated by ",".
  *
  * @author  Raj Parekh
- * @version 1
- * @since   01-06-2020
+ * @version 2
+ * @since   02-06-2020
  *
  */
 public class StringCalculator {
-
-
-    /**
-     *  An integer stating maximum numbers to be added.
-     */
-    private static final int MAX_NUMBERS_TO_BE_ADDED = 2;
-
-
     /**
      *  A Regular Expression for matching out the digits delimited with ","
      */
-    public static final String DELIMITER = "(((?!,).)\\w?)+";
+    private static final String DELIMITER = "(((?!,).)\\w?)+";
 
     /**
      * An empty constructor
      */
     StringCalculator() {}
-
 
     /**
      * A method for simple addition method taking numbers as string input and returning the sum.
@@ -48,26 +40,23 @@ public class StringCalculator {
 
     /**
      * parsing the String numbers to java.util.ArrayList list
-     * @param numbers as a string separated by "," as a delimiter
+     * @param numbers n numbers as a string separated by "," as a delimiter
      * @return ArrayList with all parsed numbers
      * @throws Exception when illegal string character is found instead of number
      * or when more than two
      */
     private ArrayList<Integer> parseNumbers(String numbers) {
 
-        int numbersCount = 1;
         ArrayList<Integer> parsedNumbers = new ArrayList<>();
 
         Pattern inputNumbersPattern = Pattern.compile(DELIMITER);
         Matcher numbersMatcher = inputNumbersPattern.matcher(numbers);
 
-        while (numbersMatcher.find() && numbersCount <= MAX_NUMBERS_TO_BE_ADDED) {
+        while (numbersMatcher.find()) {
             String extractedNumber = numbersMatcher.group();
             Integer parsedNumber = new Integer(extractedNumber);
 
             parsedNumbers.add(parsedNumber);
-
-            numbersCount++;
         }
 
         return parsedNumbers;
@@ -75,10 +64,20 @@ public class StringCalculator {
 
     /**
      * A main driver method for String Calculator.
-     * @param args
+     * @param args string arguments to java cli
      */
     public static void main(String[] args) {
         StringCalculator st = new StringCalculator();
-        System.out.println(st.add("1,2"));
+        String numberString;
+
+        // If no command line arguments are passed, then use stdinput
+        if (args.length > 0) {
+            numberString = args[0];
+        } else {
+            Scanner inputScanner = new Scanner(System.in);
+            numberString = inputScanner.next();
+        }
+
+        System.out.println(st.add(numberString));
     }
 }
