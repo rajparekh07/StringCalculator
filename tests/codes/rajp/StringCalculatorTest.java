@@ -28,8 +28,8 @@ public class StringCalculatorTest {
 
         //Generate 1000 random test cases of different number of arguments
         Random random = new Random();
-        for (int t=0; t <= 1000; t++) {
-            int listLength = random.nextInt(10000) + 5000;
+        for (int t=0; t <= 100; t++) {
+            int listLength = random.nextInt(100) + 50;
             List<Integer> testIntegerList = new ArrayList<>();
             for (int i=0; i<listLength; i++)
                 testIntegerList.add(random.nextInt());
@@ -37,6 +37,22 @@ public class StringCalculatorTest {
             Assert.assertEquals(testIntegerList.stream().mapToInt(Integer::intValue).sum(), st.add(testIntegerList.stream().map(String::valueOf)
                     .collect(Collectors.joining(","))));
         }
+    }
+
+    /**
+     * A method to test the \n or new line as the delimiter between the numbers
+     */
+    @Test
+    public void testNewLinesAsTheDelimiters() {
+        StringCalculator st = new StringCalculator();
+
+        Assert.assertEquals(6, st.add("1\n2,3"));
+        Assert.assertEquals(6, st.add("1\\n2,3"));
+        Assert.assertEquals(6, st.add("1\n2\n3"));
+        Assert.assertEquals(1+2+3+3, st.add("1,2\n3,3"));
+        Assert.assertEquals(1+2+3+3, st.add("1\n2\n3,3"));
+        Assert.assertEquals(1+2+3+3, st.add("1\n2\n3\n3"));
+
     }
 
 
@@ -60,6 +76,17 @@ public class StringCalculatorTest {
         StringCalculator st = new StringCalculator();
 
         st.add("1:2");
+    }
+
+    /**
+     *  A method to test validity of "," as the delimiter
+     * @throws Exception
+     */
+    @Test(expected=RuntimeException.class)
+    public void testTrailingDelimiter() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+        st.add("1\n2,");
     }
 
     /**

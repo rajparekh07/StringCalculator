@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * This class implements a method which adds n numbers separated by ",".
  *
  * @author  Raj Parekh
- * @version 2
+ * @version 3
  * @since   02-06-2020
  *
  */
@@ -18,7 +18,12 @@ public class StringCalculator {
     /**
      *  A Regular Expression for matching out the digits delimited with ","
      */
-    private static final String DELIMITER = "(((?!,).)\\w?)+";
+    private static final String DELIMITER = "(((?!,|(\\\\)|\\n|n).)\\w?)+";
+
+    /**
+     *  A Regular Expression for matching input number string validity
+     */
+    private static final String NUMBER_STRING_VALIDATOR = "^^((([-+])?\\d)+((,|\\n|(\\\\)|n|\\\\n)([-+])?\\d+)*)?";
 
     /**
      * An empty constructor
@@ -49,6 +54,10 @@ public class StringCalculator {
 
         ArrayList<Integer> parsedNumbers = new ArrayList<>();
 
+        if (!this.validateNumberString(numbers)) {
+            throw new RuntimeException("Invalid Number String");
+        }
+
         Pattern inputNumbersPattern = Pattern.compile(DELIMITER);
         Matcher numbersMatcher = inputNumbersPattern.matcher(numbers);
 
@@ -60,6 +69,15 @@ public class StringCalculator {
         }
 
         return parsedNumbers;
+    }
+
+    /**
+     * A private method to validate the input number string
+     * @param numbers input number string
+     * @return boolean based on number string validity
+     */
+    private boolean validateNumberString(String numbers) {
+        return Pattern.matches(NUMBER_STRING_VALIDATOR, numbers);
     }
 
     /**
