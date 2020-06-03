@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  * This class implements a method which adds n numbers separated by delimiters.
  *
  * @author  Raj Parekh
- * @version 6
- * @since   03-06-2020
+ * @version 7
+ * @since   04-06-2020
  *
  */
 public class StringCalculator {
@@ -35,19 +35,20 @@ public class StringCalculator {
         /**
          *  A Regular Expression for extracting out the custom delimiter
          */
-        static final String CUSTOM_DELIMITER_EXTRACTOR = "((?<=\\/\\/).)";
+        static final String CUSTOM_DELIMITER_EXTRACTOR = "((?<=\\/\\/\\[)\\D{1,}(?=\\]))";
         /**
          *  A Regular Expression for validate the custom delimiter mode
          */
-        static final String CUSTOM_DELIMITER_MODE_VALIDATOR = "(\\/\\/)(.(\\\\n|\\n)((.|\\n)*))";
+        static final String CUSTOM_DELIMITER_MODE_VALIDATOR = "(\\/\\/)(\\[(\\D){1,}\\](\\\\n|\\n)((.|\\n)*))";
 
         /**
          *  A method returning a Regular Expression for matching input number string validity
          *  @param optionalDelimiter a final String which is extracted custom delimiter
          *  @return updated regex having custom delimiter
          */
-        static String NUMBER_STRING_VALIDATOR(final String optionalDelimiter) {
-            return "((\\/\\/)(.(|\\n|(\\\\)|n|\\\\n)))?(((-|\\+)?\\d)+(("+ optionalDelimiter +"|,|\\n|(\\\\)|n|\\\\n)(-|\\+)?\\d+)*)";
+        static String NUMBER_STRING_VALIDATOR(String optionalDelimiter) {
+            optionalDelimiter = Pattern.quote(optionalDelimiter);
+            return "((\\/\\/)(\\[(\\D){1,}\\](|\\n|(\\\\)|n|\\\\n)))?(((-|\\+)?\\d)+(("+ optionalDelimiter +"|,|\\n|(\\\\)|n|\\\\n)(-|\\+)?\\d+)*)";
         }
 
     }

@@ -3,9 +3,8 @@ package codes.rajp;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -26,7 +25,7 @@ public class StringCalculatorTest {
         Assert.assertEquals(22, st.add("22"));
         Assert.assertEquals(2, st.add("2"));
 
-        //Generate 1000 random test cases of different number of arguments
+        //Generate 100 random test cases of different number of arguments
         Random random = new Random();
         for (int t=0; t <= 100; t++) {
             int listLength = random.nextInt(10) + 5;
@@ -61,11 +60,13 @@ public class StringCalculatorTest {
     public void testCustomDelimiters() {
         StringCalculator st = new StringCalculator();
 
-        Assert.assertEquals(6, st.add("//;\n1;2;3"));
-        Assert.assertEquals(6, st.add("//;\n1,2;3"));
-        Assert.assertEquals(6, st.add("//s\n1,2s3"));
-        Assert.assertEquals(6, st.add("//;\n1\n2\n3"));
-        Assert.assertEquals(6, st.add("//;\\n1\n2\n3"));
+        Assert.assertEquals(6, st.add("//[;]\n1;2;3"));
+        Assert.assertEquals(6, st.add("//[;]\n1,2;3"));
+        Assert.assertEquals(6, st.add("//[s]\n1,2s3"));
+        Assert.assertEquals(6, st.add("//[;]\n1\n2\n3"));
+        Assert.assertEquals(6, st.add("//[;]\\n1\n2\n3"));
+        Assert.assertEquals(9, st.add("//[*]\n1*3,5"));
+
     }
 
     /**
@@ -76,7 +77,7 @@ public class StringCalculatorTest {
     public void testIllegalCustomDelimiters() throws Exception {
         StringCalculator st = new StringCalculator();
 
-        Assert.assertEquals(6, st.add("//1\n112;3"));
+        Assert.assertEquals(6, st.add("//[1]\n112;3"));
     }
 
     /**
@@ -149,10 +150,41 @@ public class StringCalculatorTest {
     public void testIgnoringNumbersMoreThan1000() throws Exception {
         StringCalculator st = new StringCalculator();
 
-
         Assert.assertEquals(2, st.add("2,1001"));
         Assert.assertEquals(1, st.add("1,2000"));
         Assert.assertEquals(0, st.add("1000"));
     }
 
+    /**
+     * A method to test multi-character custom delimiters
+     * @throws Exception
+     */
+    @Test
+    public void testMultiCharacterCustomDelimiter() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+        Assert.assertEquals(9, st.add("//[****]\n1****3,5"));
+
+        //Generate 100 random test cases of different length of delimiters
+        Random random = new Random();
+        for (int t=0; t <= 10; t++) {
+            int listLength = random.nextInt(10) + 5;
+            List<Integer> testIntegerList = new ArrayList<>();
+            for (int i=0; i<listLength; i++)
+                testIntegerList.add(Math.abs(random.nextInt(2000)));
+
+            Function<Void, String> getCustomDelimiter = x -> {
+                String dict = "!@#$%^&*()+_={}|:';\"?><,./`~";
+                return String.join("",
+                        Collections.nCopies(
+                            Math.abs(random.nextInt(9))+1,
+                            ""+dict.charAt(random.nextInt(dict.length()-1))
+                ));
+            };
+
+            String customDelimiter = getCustomDelimiter.apply(null);
+            Assert.assertEquals(testIntegerList.stream().filter(num->num<1000).mapToInt(Integer::intValue).sum(),
+                    st.add("//["+customDelimiter+"]\n"+testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(customDelimiter))));
+        }
+    }
 }
