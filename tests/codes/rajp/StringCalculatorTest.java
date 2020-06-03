@@ -1,6 +1,5 @@
 package codes.rajp;
 
-import codes.rajp.exceptions.NegativeNumberHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,19 +22,19 @@ public class StringCalculatorTest {
 
         Assert.assertEquals(6, st.add("1,2,3"));
         Assert.assertEquals(3, st.add("1,2"));
-        Assert.assertEquals(11233, st.add("1,11232"));
+        Assert.assertEquals(1, st.add("1,11232"));
         Assert.assertEquals(22, st.add("22"));
         Assert.assertEquals(2, st.add("2"));
 
         //Generate 1000 random test cases of different number of arguments
         Random random = new Random();
         for (int t=0; t <= 100; t++) {
-            int listLength = random.nextInt(100) + 50;
+            int listLength = random.nextInt(10) + 5;
             List<Integer> testIntegerList = new ArrayList<>();
             for (int i=0; i<listLength; i++)
-                testIntegerList.add(Math.abs(random.nextInt()));
+                testIntegerList.add(Math.abs(random.nextInt(2000)));
 
-            Assert.assertEquals(testIntegerList.stream().mapToInt(Integer::intValue).sum(), st.add(testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(","))));
+            Assert.assertEquals(testIntegerList.stream().filter(num->num<1000).mapToInt(Integer::intValue).sum(), st.add(testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(","))));
         }
     }
 
@@ -140,6 +139,20 @@ public class StringCalculatorTest {
         Assert.assertEquals(-1, st.add("1,-2"));
         Assert.assertEquals(1, st.add("-1,2"));
         Assert.assertEquals(-2, st.add("-2"));
+    }
+
+
+    /**
+     * A method to test ignoring of values greater than 1000 to the sum
+     */
+    @Test
+    public void testIgnoringNumbersMoreThan1000() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+
+        Assert.assertEquals(2, st.add("2,1001"));
+        Assert.assertEquals(1, st.add("1,2000"));
+        Assert.assertEquals(0, st.add("1000"));
     }
 
 }

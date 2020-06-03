@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * This class implements a method which adds n numbers separated by delimiters.
  *
  * @author  Raj Parekh
- * @version 5
+ * @version 6
  * @since   03-06-2020
  *
  */
@@ -67,7 +67,7 @@ public class StringCalculator {
                 negativeNumberHandler.reportNegativeNumber(number);
                 return false;
             }
-            return true;
+            return number < 1000;
         }).sum();
 
         if (negativeNumberHandler.isEligibleForException()) {
