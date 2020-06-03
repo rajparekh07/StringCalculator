@@ -1,5 +1,7 @@
 package codes.rajp;
 
+import codes.rajp.exceptions.NegativeNumberHandler;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -10,7 +12,7 @@ import java.util.regex.Pattern;
  * This class implements a method which adds n numbers separated by delimiters.
  *
  * @author  Raj Parekh
- * @version 4
+ * @version 5
  * @since   03-06-2020
  *
  */
@@ -58,8 +60,21 @@ public class StringCalculator {
     public int add(String numbers) {
 
         ArrayList<Integer> parsedNumbers = this.parseNumbers(numbers);
+        NegativeNumberHandler negativeNumberHandler = new NegativeNumberHandler();
 
-        return parsedNumbers.stream().mapToInt(Integer::intValue).sum();
+        int sum = parsedNumbers.stream().mapToInt(Integer::intValue).filter(number -> {
+            if (number < 0) {
+                negativeNumberHandler.reportNegativeNumber(number);
+                return false;
+            }
+            return true;
+        }).sum();
+
+        if (negativeNumberHandler.isEligibleForException()) {
+            throw negativeNumberHandler.getException();
+        }
+
+        return sum;
     }
 
 

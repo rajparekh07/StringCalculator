@@ -1,5 +1,6 @@
 package codes.rajp;
 
+import codes.rajp.exceptions.NegativeNumberHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,10 +33,9 @@ public class StringCalculatorTest {
             int listLength = random.nextInt(100) + 50;
             List<Integer> testIntegerList = new ArrayList<>();
             for (int i=0; i<listLength; i++)
-                testIntegerList.add(random.nextInt());
+                testIntegerList.add(Math.abs(random.nextInt()));
 
-            Assert.assertEquals(testIntegerList.stream().mapToInt(Integer::intValue).sum(), st.add(testIntegerList.stream().map(String::valueOf)
-                    .collect(Collectors.joining(","))));
+            Assert.assertEquals(testIntegerList.stream().mapToInt(Integer::intValue).sum(), st.add(testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(","))));
         }
     }
 
@@ -103,7 +103,7 @@ public class StringCalculatorTest {
     }
 
     /**
-     *  A method to test validity of "," as the delimiter
+     *  A method to test validity of delimiters
      * @throws Exception
      */
     @Test(expected=RuntimeException.class)
@@ -121,14 +121,25 @@ public class StringCalculatorTest {
     public void testDifferentNumbers() throws Exception {
         StringCalculator st = new StringCalculator();
 
-        Assert.assertEquals(-1, st.add("1,-2"));
-        Assert.assertEquals(1, st.add("-1,2"));
-        Assert.assertEquals(-2, st.add("-2"));
         Assert.assertEquals(2, st.add("2,000000"));
         Assert.assertEquals(2, st.add("00002,000000"));
         Assert.assertEquals(2, st.add("2,+0"));
         Assert.assertEquals(2, st.add("+2,+0"));
 
+    }
+
+    /**
+     * A method to test handling of negative numbers
+     * @throws Exception
+     */
+    @Test(expected = RuntimeException.class)
+    public void testNegativeNumbers() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+
+        Assert.assertEquals(-1, st.add("1,-2"));
+        Assert.assertEquals(1, st.add("-1,2"));
+        Assert.assertEquals(-2, st.add("-2"));
     }
 
 }
