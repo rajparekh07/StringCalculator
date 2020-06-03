@@ -4,11 +4,17 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
+/**
+ * String Calculator
+ * A JUnit Class to test various aspects of codes.rajp.StringCalculator
+ * @author rajparekh
+ * @version 9
+ * @since 04-05-2020
+ */
 public class StringCalculatorTest {
 
     /**
@@ -173,16 +179,7 @@ public class StringCalculatorTest {
             for (int i=0; i<listLength; i++)
                 testIntegerList.add(Math.abs(random.nextInt(2000)));
 
-            Function<Void, String> getCustomDelimiter = x -> {
-                String dict = "!@#$%^&*()+_={}|:';\"?><,./`~";
-                return String.join("",
-                        Collections.nCopies(
-                            Math.abs(random.nextInt(9))+1,
-                            ""+dict.charAt(random.nextInt(dict.length()-1))
-                ));
-            };
-
-            String customDelimiter = getCustomDelimiter.apply(null);
+            String customDelimiter =  this.getRandomString();
             Assert.assertEquals(testIntegerList.stream().filter(num->num<1000).mapToInt(Integer::intValue).sum(),
                     st.add("//["+customDelimiter+"]\n"+testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(customDelimiter))));
         }
@@ -206,21 +203,23 @@ public class StringCalculatorTest {
             for (int i=0; i<listLength; i++)
                 testIntegerList.add(Math.abs(random.nextInt(2000)));
 
-            Function<Void, String> getCustomDelimiter = x -> {
-                String dict = "!@#$%^&*()+_={}|:';\"?><,./`~";
-                return String.join("",
-                        Collections.nCopies(
-                                Math.abs(random.nextInt(9))+1,
-                                ""+dict.charAt(random.nextInt(dict.length()-1))
-                        ));
-            };
 
             String customDelimiters[] = new String[2];
             for (int i=0; i < customDelimiters.length; i++) {
-                customDelimiters[i] = getCustomDelimiter.apply(null);
+                customDelimiters[i] = this.getRandomString();
             }
             Assert.assertEquals(testIntegerList.stream().filter(num->num<1000).mapToInt(Integer::intValue).sum(),
                     st.add("//["+customDelimiters[0]+"]["+customDelimiters[1]+"]\n"+testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(customDelimiters[Math.abs(random.nextInt())%2]))));
         }
+    }
+
+    private String getRandomString() {
+        Random random = new Random();
+        String dict = "!@#$%^&*()+_={}|:';\"?><,./`~";
+        return String.join("",
+                Collections.nCopies(
+                        Math.abs(random.nextInt(9))+1,
+                        ""+dict.charAt(random.nextInt(dict.length()-1))
+                ));
     }
 }
