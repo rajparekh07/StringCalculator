@@ -55,6 +55,30 @@ public class StringCalculatorTest {
 
     }
 
+    /**
+     * A method to test the custom delimiter mode
+     */
+    @Test
+    public void testCustomDelimiters() {
+        StringCalculator st = new StringCalculator();
+
+        Assert.assertEquals(6, st.add("//;\n1;2;3"));
+        Assert.assertEquals(6, st.add("//;\n1,2;3"));
+        Assert.assertEquals(6, st.add("//s\n1,2s3"));
+        Assert.assertEquals(6, st.add("//;\n1\n2\n3"));
+        Assert.assertEquals(6, st.add("//;\\n1\n2\n3"));
+    }
+
+    /**
+     * A method to test illegal custom delimiter mode
+     * @throws Exception
+     */
+    @Test(expected = RuntimeException.class)
+    public void testIllegalCustomDelimiters() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+        Assert.assertEquals(6, st.add("//1\n112;3"));
+    }
 
     /**
      *  A method to test accepting of valid digits
