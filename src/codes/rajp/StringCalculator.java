@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * This class implements a method which adds n numbers separated by delimiters.
  *
  * @author  Raj Parekh
- * @version 7
+ * @version 8
  * @since   04-06-2020
  *
  */
@@ -33,23 +33,10 @@ public class StringCalculator {
          */
         static final String NUMBER_EXTRACTOR = "[-+]?(\\d+)";
         /**
-         *  A Regular Expression for extracting out the custom delimiter
-         */
-        static final String CUSTOM_DELIMITER_EXTRACTOR = "((?<=\\/\\/\\[)\\D{1,}(?=\\]))";
-        /**
-         *  A Regular Expression for validate the custom delimiter mode
-         */
-        static final String CUSTOM_DELIMITER_MODE_VALIDATOR = "(\\/\\/)(\\[(\\D){1,}\\](\\\\n|\\n)((.|\\n)*))";
-
-        /**
          *  A method returning a Regular Expression for matching input number string validity
-         *  @param optionalDelimiter a final String which is extracted custom delimiter
          *  @return updated regex having custom delimiter
          */
-        static String NUMBER_STRING_VALIDATOR(String optionalDelimiter) {
-            optionalDelimiter = Pattern.quote(optionalDelimiter);
-            return "((\\/\\/)(\\[(\\D){1,}\\](|\\n|(\\\\)|n|\\\\n)))?(((-|\\+)?\\d)+(("+ optionalDelimiter +"|,|\\n|(\\\\)|n|\\\\n)(-|\\+)?\\d+)*)";
-        }
+        static final String NUMBER_STRING_VALIDATOR = "((\\/\\/)(\\[(\\D{1,})\\](\\[(\\D{1,})\\])?(|\\n|(\\\\)|n|\\\\n)))?(((-|\\+)?\\d)+((\\4|\\6|,|\\n|(\\\\)|n|\\\\n)(-|\\+)?\\d+)*)";
 
     }
 
@@ -59,7 +46,6 @@ public class StringCalculator {
      * @return sum of numbers passed as the argument
      */
     public int add(String numbers) {
-
         ArrayList<Integer> parsedNumbers = this.parseNumbers(numbers);
         NegativeNumberHandler negativeNumberHandler = new NegativeNumberHandler();
 
@@ -108,40 +94,12 @@ public class StringCalculator {
     }
 
     /**
-     * A method to extract custom delimiter from number string
-     * @param numbers a string of delimited numbers
-     * @return matched custom delimiter
-     */
-    private String extractCustomDelimiter(String numbers) {
-        Pattern customDelimiterPattern = Pattern.compile(RegexStore.CUSTOM_DELIMITER_EXTRACTOR);
-        Matcher customerDelimitersMatcher = customDelimiterPattern.matcher(numbers);
-        if (customerDelimitersMatcher.find()) {
-            return customerDelimitersMatcher.group();
-        }
-
-        throw new RuntimeException("Expected Custom Delimiter not found");
-    }
-
-    /**
      * A private method to validate the input number string
      * @param numbers input number string
      * @return boolean based on number string validity
      */
     private boolean validateNumberString(String numbers) {
-        String optionalDelimiter = "";
-        if (this.hasCustomDelimiters(numbers)) {
-            optionalDelimiter = extractCustomDelimiter(numbers);
-        }
-        return Pattern.matches(RegexStore.NUMBER_STRING_VALIDATOR(optionalDelimiter), numbers);
-    }
-
-    /**
-     * A private method to validate the custom delimiter in number string
-     * @param numbers input number string
-     * @return boolean based on custom delimiter string validity
-     */
-    private boolean hasCustomDelimiters(String numbers) {
-        return numbers.matches(RegexStore.CUSTOM_DELIMITER_MODE_VALIDATOR);
+        return Pattern.matches(RegexStore.NUMBER_STRING_VALIDATOR, numbers);
     }
 
 

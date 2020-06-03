@@ -187,4 +187,40 @@ public class StringCalculatorTest {
                     st.add("//["+customDelimiter+"]\n"+testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(customDelimiter))));
         }
     }
+
+    /**
+     * A method to test multi-character multi custom delimiters
+     * @throws Exception
+     */
+    @Test
+    public void testMultiCharacterMultiCustomDelimiter() throws Exception {
+        StringCalculator st = new StringCalculator();
+
+        Assert.assertEquals(9, st.add("//[****]\n1****3,5"));
+
+        //Generate 100 random test cases of different length of multiple delimiters
+        Random random = new Random();
+        for (int t=0; t <= 10; t++) {
+            int listLength = random.nextInt(10) + 5;
+            List<Integer> testIntegerList = new ArrayList<>();
+            for (int i=0; i<listLength; i++)
+                testIntegerList.add(Math.abs(random.nextInt(2000)));
+
+            Function<Void, String> getCustomDelimiter = x -> {
+                String dict = "!@#$%^&*()+_={}|:';\"?><,./`~";
+                return String.join("",
+                        Collections.nCopies(
+                                Math.abs(random.nextInt(9))+1,
+                                ""+dict.charAt(random.nextInt(dict.length()-1))
+                        ));
+            };
+
+            String customDelimiters[] = new String[2];
+            for (int i=0; i < customDelimiters.length; i++) {
+                customDelimiters[i] = getCustomDelimiter.apply(null);
+            }
+            Assert.assertEquals(testIntegerList.stream().filter(num->num<1000).mapToInt(Integer::intValue).sum(),
+                    st.add("//["+customDelimiters[0]+"]["+customDelimiters[1]+"]\n"+testIntegerList.stream().map(String::valueOf).collect(Collectors.joining(customDelimiters[Math.abs(random.nextInt())%2]))));
+        }
+    }
 }
