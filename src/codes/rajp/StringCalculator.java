@@ -33,8 +33,7 @@ public class StringCalculator {
          */
         static final String NUMBER_EXTRACTOR = "[-+]?(\\d+)";
         /**
-         *  A method returning a Regular Expression for matching input number string validity
-         *  @return updated regex having custom delimiter
+         *  A Regular Expression for matching input number string validity
          */
         static final String NUMBER_STRING_VALIDATOR = "((\\/\\/)(\\[(\\D{1,})\\](\\[(\\D{1,})\\])?(|\\n|(\\\\)|n|\\\\n)))?(((-|\\+)?\\d)+((\\4|\\6|,|\\n|(\\\\)|n|\\\\n)(-|\\+)?\\d+)*)";
 
